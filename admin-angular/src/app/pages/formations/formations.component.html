@@ -1,4 +1,5 @@
-<nz-table #basicTable [nzData]="listOfData">
+<button nz-button nzType="primary" routerLink="/formations/ajouter">Ajouter</button>
+<nz-table #basicTable [nzData]="formations">
   <thead>
     <tr>
       <th>ID</th>
@@ -12,9 +13,9 @@
       <td>{{ data.id }}</td>
       <td>{{ data.nom }}</td>
       <td>
-        <a routerLink="/formations/editer/{{data.id}}">Editer</a>
+        <a routerLink="/formations/editer/{{ data.id }}">Editer</a>
         <nz-divider nzType="vertical"></nz-divider>
-        <a>Supprimer</a>
+        <a (click)="deleteFormation(data.id)">Supprimer</a>
       </td>
     </tr>
     }

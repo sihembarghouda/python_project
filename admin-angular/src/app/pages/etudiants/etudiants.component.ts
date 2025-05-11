@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { RouterLink } from '@angular/router';
-
+import { EtudiantService } from '../../services/etudiant.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 interface Etudiant {
   id: string;
   nom: string;
@@ -13,32 +14,28 @@ interface Etudiant {
 
 @Component({
   selector: 'app-etudiants',
-  imports: [NzTableModule, NzDividerModule, RouterLink],
+  imports: [NzTableModule, NzDividerModule, RouterLink, NzButtonModule],
   templateUrl: './etudiants.component.html',
   styleUrl: './etudiants.component.css',
 })
 export class EtudiantsComponent {
-  listOfData: Etudiant[] = [
-    {
-      id: '20250001',
-      nom: 'BARGHOUDA',
-      prenom: 'Syhem',
-      email: 'syhem@gmail.com',
-      telephone: '98123456',
-    },
-    {
-      id: '20250001',
-      nom: 'BARGHOUDA',
-      prenom: 'Syhem',
-      email: 'syhem@gmail.com',
-      telephone: '98123456',
-    },
-    {
-      id: '20250001',
-      nom: 'BARGHOUDA',
-      prenom: 'Syhem',
-      email: 'syhem@gmail.com',
-      telephone: '98123456',
-    },
-  ];
+  etudiants: Etudiant[] = [];
+
+  constructor(private etudiantService: EtudiantService) {}
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.etudiantService.getEtudiants().subscribe((data: Etudiant[]) => {
+      this.etudiants = data;
+    });
+  }
+
+  deleteEtudiant(id: any) {
+    this.etudiantService.deleteEtudiant(id).subscribe(() => {
+      this.loadData();
+    });
+  }
 }

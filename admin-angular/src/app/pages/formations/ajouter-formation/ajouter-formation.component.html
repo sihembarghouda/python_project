@@ -1,0 +1,38 @@
+<div nz-row nzJustify="center">
+  <form
+    nz-col
+    nzSpan="16"
+    nz-form
+    [formGroup]="validateForm"
+    class="login-form"
+    (ngSubmit)="submitForm()"
+  >
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Veuillez entrer l'id de la formation!">
+        <nz-input-group>
+          <input
+            type="number"
+            nz-input
+            formControlName="id"
+            placeholder="ID formation"
+          />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Veuillez entrer le nom de la formation!">
+        <nz-input-group>
+          <input type="text" nz-input formControlName="nom" placeholder="Nom" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+
+    <button
+      nz-button
+      class="login-form-button login-form-margin"
+      [nzType]="'primary'"
+    >
+      Enregistrer
+    </button>
+  </form>
+</div>

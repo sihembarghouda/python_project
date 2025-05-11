@@ -1,4 +1,5 @@
-<nz-table #basicTable [nzData]="listOfData">
+<button nz-button nzType="primary" routerLink="/etudiants/ajouter">Ajouter</button>
+<nz-table #basicTable [nzData]="etudiants">
   <thead>
     <tr>
       <th>ID</th>
@@ -18,9 +19,9 @@
       <td>{{ data.email }}</td>
       <td>{{ data.telephone }}</td>
       <td>
-         <a routerLink="/etudiants/editer/{{data.id}}">Editer</a>
+        <a routerLink="/etudiants/editer/{{ data.id }}">Editer</a>
         <nz-divider nzType="vertical"></nz-divider>
-        <a>Supprimer</a>
+        <a (click)="deleteEtudiant(data.id)">Supprimer</a>
       </td>
     </tr>
     }

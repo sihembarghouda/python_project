@@ -9,36 +9,23 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 @Component({
-  selector: 'app-editer-etudiant',
+  selector: 'app-ajouter-etudiant',
   imports: [NzFormModule, NzInputModule, NzButtonModule, ReactiveFormsModule],
-  templateUrl: './editer-etudiant.component.html',
-  styleUrl: './editer-etudiant.component.css',
+  templateUrl: './ajouter-etudiant.component.html',
+  styleUrl: './ajouter-etudiant.component.css',
 })
-export class EditerEtudiantComponent {
+export class AjouterEtudiantComponent {
   constructor(
     private etudiantService: EtudiantService,
-    private route: ActivatedRoute,
     private router: Router
   ) {}
 
-  ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.etudiantService.getEtudiant(id).subscribe((data) => {
-      this.etudiant = data;
-      this.validateForm.patchValue({
-        nom: this.etudiant.nom,
-        prenom: this.etudiant.prenom,
-        email: this.etudiant.email,
-        telephone: this.etudiant.telephone,
-      });
-    });
-  }
   private fb = inject(NonNullableFormBuilder);
-  etudiant: any;
 
   validateForm = this.fb.group({
+    id: this.fb.control(null, [Validators.required]),
     nom: this.fb.control('', [Validators.required]),
     prenom: this.fb.control('', [Validators.required]),
     email: this.fb.control('', [Validators.required]),
@@ -48,7 +35,7 @@ export class EditerEtudiantComponent {
   submitForm(): void {
     if (this.validateForm.valid) {
       this.etudiantService
-        .updateEtudiant(this.etudiant.id, this.validateForm.value)
+        .ajouterEtudiant(this.validateForm.value)
         .subscribe((res) => {
           this.router.navigate(['/etudiants']);
         });

@@ -10,12 +10,16 @@ import { BooksComponent } from './pages/books/books.component';
 import { AboutComponent } from './pages/about/about.component';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { AjouterEtudiantComponent } from './pages/etudiants/ajouter-etudiant/ajouter-etudiant.component';
+import { AjouterDepartementComponent } from './pages/departements/ajouter-departement/ajouter-departement.component';
+import { AjouterFormationComponent } from './pages/formations/ajouter-formation/ajouter-formation.component';
 
 export const routes: Routes = [
   {
     path: 'formations',
     children: [
       { path: '', component: FormationsComponent },
+      { path: 'ajouter', component: AjouterFormationComponent },
       { path: 'editer/:id', component: EditerFormationComponent },
     ],
   },
@@ -23,6 +27,7 @@ export const routes: Routes = [
     path: 'departements',
     children: [
       { path: '', component: DepartementsComponent },
+      { path: 'ajouter', component: AjouterDepartementComponent },
       { path: 'editer/:id', component: EditerDepartementComponent },
     ],
   },
@@ -31,19 +36,17 @@ export const routes: Routes = [
     path: 'etudiants',
     children: [
       { path: '', component: EtudiantsComponent },
+      { path: 'ajouter', component: AjouterEtudiantComponent },
       { path: 'editer/:id', component: EditerEtudiantComponent },
     ],
   },
-
-  {path: 'books', component: BooksComponent},
-  
-  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
-
+  { path: 'books', component: BooksComponent },
   { path: 'about', component: AboutComponent },
+  { path: '', pathMatch: 'full', redirectTo: '/dashboard' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
