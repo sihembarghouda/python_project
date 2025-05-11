@@ -1,0 +1,65 @@
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <a>
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <h1>Espace Admin</h1>
+      </a>
+    </div>
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-menu-item nzMatchRouter routerLink="/dashboard">
+        <span nz-icon nzType="global"></span>
+        <span>Dashboard</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/formations">
+        <span nz-icon nzType="book"></span>
+        <span>Formations</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/departements">
+        <span nz-icon nzType="bank"></span>
+        <span>Départements</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/etudiants">
+        <span nz-icon nzType="team"></span>
+        <span>Etudiants</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/books">
+        <span nz-icon nzType="account-book"></span>
+        <span>Books</span>
+      </li>
+    </ul>
+  </nz-sider>
+  
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <nz-icon
+            class="trigger"
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          />
+        </span>
+  
+
+      </div>
+    </nz-header>
+    
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

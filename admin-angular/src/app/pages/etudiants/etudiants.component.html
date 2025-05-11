@@ -1,0 +1,28 @@
+<nz-table #basicTable [nzData]="listOfData">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Email</th>
+      <th>Téléphone</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (data of basicTable.data; track data) {
+    <tr>
+      <td>{{ data.id }}</td>
+      <td>{{ data.nom }}</td>
+      <td>{{ data.prenom }}</td>
+      <td>{{ data.email }}</td>
+      <td>{{ data.telephone }}</td>
+      <td>
+         <a routerLink="/etudiants/editer/{{data.id}}">Editer</a>
+        <nz-divider nzType="vertical"></nz-divider>
+        <a>Supprimer</a>
+      </td>
+    </tr>
+    }
+  </tbody>
+</nz-table>

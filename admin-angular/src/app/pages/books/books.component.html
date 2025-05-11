@@ -1,0 +1,12 @@
+<div class="books-container">
+  <div class="book-card" *ngFor="let book of books">
+    <img [src]="book.image" alt="Couverture de {{ book.title }}" class="book-image" />
+    <div class="book-content">
+      <h2 class="book-title">{{ book.title }}</h2>
+      <p class="book-author">{{ book.author }}</p>
+      <a [href]="book.link" target="_blank" rel="noopener noreferrer">
+        <button class="discover-button">Découvrir</button>
+      </a>
+    </div>
+  </div>
+</div>
