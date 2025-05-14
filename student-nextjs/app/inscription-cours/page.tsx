@@ -1,25 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Typography, Select, Button, Form, message, Layout } from 'antd';
-import HeaderMenu from '@/components/header'; // adjust path if needed
+import { useEffect, useState } from "react";
+import { Typography, Select, Button, Form, message, Layout } from "antd";
+import HeaderMenu from "@/components/header";
+import api from "@/lib/http";
 
 const { Title } = Typography;
 const { Content } = Layout;
-const { Option } = Select;
-
-const availableCourses = [
-  { id: 'C001', name: 'Mathematics' },
-  { id: 'C002', name: 'Computer Science' },
-  { id: 'C003', name: 'Physics' },
-];
 
 export default function InscriptionCoursPage() {
+  const [courses, setCourses] = useState<{ id: string; nom: string }[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string | undefined>();
+
+  useEffect(() => {
+    api
+      .get("/formations")
+      .then((res: any) => setCourses(res.data))
+      .catch(() => message.error("Échec de récupération des formations"));
+  }, []);
 
   const handleSubmit = () => {
     if (!selectedCourse) {
-      message.error('Veuillez sélectionner un cours.');
+      message.error("Veuillez sélectionner un cours.");
       return;
     }
 
@@ -28,25 +30,31 @@ export default function InscriptionCoursPage() {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <HeaderMenu active="inscription" />
-      <Content style={{ padding: '50px' }}>
-        <div style={{ background: '#fff', padding: 24, maxWidth: 600, margin: '0 auto', borderRadius: 8 }}>
+      <Content style={{ padding: "50px" }}>
+        <div
+          style={{
+            background: "#fff",
+            padding: 24,
+            maxWidth: 600,
+            margin: "0 auto",
+            borderRadius: 8,
+          }}
+        >
           <Title level={2}>Inscription à un cours</Title>
 
           <Form layout="vertical">
             <Form.Item label="Choisissez un cours">
               <Select
                 placeholder="Sélectionner un cours"
-                value={selectedCourse}
-                onChange={(value) => setSelectedCourse(value)}
-              >
-                {availableCourses.map((course) => (
-                  <Option key={course.id} value={course.name}>
-                    {course.name}
-                  </Option>
-                ))}
-              </Select>
+                style={{ width: 300 }}
+                onChange={setSelectedCourse}
+                options={courses.map((course) => ({
+                  label: course.nom,
+                  value: course.id,
+                }))}
+              />
             </Form.Item>
 
             <Form.Item>

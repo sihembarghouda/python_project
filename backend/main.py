@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
     "http://localhost:4200",
+    "http://localhost:4000",
 ]
 
 app = FastAPI()
@@ -31,6 +32,7 @@ class Etudiant(BaseModel):
     prenom: str
     email: str
     telephone: str
+    password: str
 
 client = AsyncIOMotorClient("mongodb://localhost:27017")
 db = client["students-management"]
@@ -145,3 +147,11 @@ async def ajouter_formation(item: dict):
     collection = db["formations"]
     result = await collection.insert_one(item)
     return {"message": "Item created successfully"}
+
+@app.post("/login")
+async def login(item: dict):  
+    collection = db["etudiants"]
+    result = await collection.find_one({"email": item['email']}, {"_id": 0})
+    if(result is None):
+        raise HTTPException(status_code=401, detail="Email ou mot de passe invalide")
+    return result

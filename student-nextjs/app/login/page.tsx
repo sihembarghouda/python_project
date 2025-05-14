@@ -1,70 +1,57 @@
-// app/login/page.tsx
 "use client";
-import { FC, useState } from "react";
-import { Form, Input, Button, Card, Space } from "antd";
+import { Button, Form, Input, message, Typography } from "antd";
 import { useRouter } from "next/navigation";
+import api from "@/lib/http";
 
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
+const { Title } = Typography;
 
-const Login: FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+export default function LoginPage() {
   const router = useRouter();
 
-  const handleSubmit = async (values: LoginFormValues) => {
-    setLoading(true);
-    // Example: Add your authentication logic here
-    setLoading(false);
-    router.push("/dashboard"); // Redirect to dashboard after successful login
-  };
+  const onFinish = async (values: any) => {
+    try {
+      const res = await api.post("/login", {
+        email: values.email,
+        password: values.password,
+      });
 
-  const handleRegisterClick = () => {
-    router.push("/register");
+      message.success("Connexion réussie !");
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.log('HERE');
+      message.error("Échec de la connexion");
+    }
   };
 
   return (
-    <div style={{ padding: "50px", display: "flex", justifyContent: "center" }}>
-      <Card title="Connexion" style={{ width: 400 }}>
-        <Form
-          name="login"
-          initialValues={{ remember: true }}
-          onFinish={handleSubmit}
+    <div style={{ maxWidth: 400, margin: "auto", paddingTop: 100 }}>
+      <Title level={2}>Connexion</Title>
+      <Form layout="vertical" onFinish={onFinish}>
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[{ required: true, type: "email" }]}
         >
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: "Please input your email!" }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Mot de passe"
-            name="password"
-            rules={[{ required: true, message: "Please input your password!" }]}
-          >
-            <Input.Password />
-          </Form.Item>
-
-          <Form.Item>
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <Button type="primary" htmlType="submit" loading={loading} block>
-                Se connecter
-              </Button>
-            </Space>
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="default" block onClick={handleRegisterClick}>
-              S'inscrire
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Mot de passe"
+          rules={[{ required: true }]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" block>
+            Se connecter
+          </Button>
+        </Form.Item>
+        <Form.Item>
+          <Button type="link" block onClick={() => router.push("/register")}>
+            Pas de compte ? S'inscrire
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
-};
-
-export default Login;
+}
