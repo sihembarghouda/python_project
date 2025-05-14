@@ -10,7 +10,6 @@ import { BooksComponent } from './pages/books/books.component';
 import { AboutComponent } from './pages/about/about.component';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AjouterEtudiantComponent } from './pages/etudiants/ajouter-etudiant/ajouter-etudiant.component';
 import { AjouterDepartementComponent } from './pages/departements/ajouter-departement/ajouter-departement.component';
 import { AjouterFormationComponent } from './pages/formations/ajouter-formation/ajouter-formation.component';
 
@@ -36,7 +35,6 @@ export const routes: Routes = [
     path: 'etudiants',
     children: [
       { path: '', component: EtudiantsComponent },
-      { path: 'ajouter', component: AjouterEtudiantComponent },
       { path: 'editer/:id', component: EditerEtudiantComponent },
     ],
   },

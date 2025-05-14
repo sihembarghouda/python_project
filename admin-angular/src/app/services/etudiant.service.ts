@@ -25,8 +25,4 @@ export class EtudiantService {
   deleteEtudiant(id: any): Observable<any> {
     return this.http.delete(this.api_url + '/etudiants/' + id);
   }
-
-  ajouterEtudiant(data: any): Observable<any> {
-    return this.http.post(this.api_url + '/etudiants', data);
-  }
 }

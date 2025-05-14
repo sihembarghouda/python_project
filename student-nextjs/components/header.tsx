@@ -25,6 +25,7 @@ const HeaderMenu = ({ active }: HeaderMenuProps) => {
         router.push('/mon-profil');
         break;
       case 'logout':
+        localStorage.removeItem('currentUser');
         notification.success({
           message: 'Déconnexion réussie',
           description: 'Vous avez été déconnecté avec succès.',

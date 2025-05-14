@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Typography, Select, Button, Form, message, Layout } from "antd";
 import HeaderMenu from "@/components/header";
 import api from "@/lib/http";
+import { useRouter } from "next/navigation";
 
 const { Title } = Typography;
 const { Content } = Layout;
@@ -11,6 +12,8 @@ const { Content } = Layout;
 export default function InscriptionCoursPage() {
   const [courses, setCourses] = useState<{ id: string; nom: string }[]>([]);
   const [selectedCourse, setSelectedCourse] = useState<string | undefined>();
+  const router = useRouter();
+  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
   useEffect(() => {
     api
@@ -19,14 +22,19 @@ export default function InscriptionCoursPage() {
       .catch(() => message.error("Échec de récupération des formations"));
   }, []);
 
-  const handleSubmit = () => {
-    if (!selectedCourse) {
-      message.error("Veuillez sélectionner un cours.");
-      return;
-    }
+  const onFinish = async (values: any) => {
+    try {
+      const res = await api.post("/inscription-cours", {
+        etudiant_id: currentUser.id,
+        formation_id: selectedCourse,
+      });
 
-    message.success(`Vous êtes inscrit au cours : ${selectedCourse}`);
-    setSelectedCourse(undefined);
+      message.success("Inscription Cours réussie !");
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.log("HERE");
+      message.error("Échec de la connexion");
+    }
   };
 
   return (
@@ -58,7 +66,7 @@ export default function InscriptionCoursPage() {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" onClick={handleSubmit}>
+              <Button type="primary" onClick={onFinish}>
                 S'inscrire
               </Button>
             </Form.Item>

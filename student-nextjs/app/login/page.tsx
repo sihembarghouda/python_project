@@ -8,17 +8,22 @@ const { Title } = Typography;
 export default function LoginPage() {
   const router = useRouter();
 
+  if (localStorage.getItem("currentUser")) {
+    router.push("/dashboard");
+  } 
+
   const onFinish = async (values: any) => {
     try {
-      const res = await api.post("/login", {
+      const user = await api.post("/login", {
         email: values.email,
         password: values.password,
       });
 
       message.success("Connexion réussie !");
+      localStorage.setItem("currentUser", JSON.stringify(user.data));
       router.push("/dashboard");
     } catch (error: any) {
-      console.log('HERE');
+      console.log("HERE");
       message.error("Échec de la connexion");
     }
   };

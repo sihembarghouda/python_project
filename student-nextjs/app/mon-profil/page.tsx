@@ -7,13 +7,7 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 // Dummy current user data
-const currentUser = {
-  id: 'U12345',
-  nom: 'Doe',
-  prenom: 'John',
-  email: 'john.doe@example.com',
-  telephone: '+216 12 345 678',
-};
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
 export default function MonProfilPage() {
   return (

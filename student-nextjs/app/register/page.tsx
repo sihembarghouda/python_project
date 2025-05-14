@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { Layout, Typography, Form, Input, Button, message } from 'antd';
-import { useRouter } from 'next/navigation';
+import api from "@/lib/http";
+import { Layout, Typography, Form, Input, Button, message } from "antd";
+import { useRouter } from "next/navigation";
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -10,39 +11,67 @@ export default function RegisterPage() {
   const router = useRouter();
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log('Registered:', values);
-    message.success('Inscription réussie');
-    router.push('/login');
+  if (localStorage.getItem("currentUser")) {
+    router.push("/dashboard");
+  }
+
+  const onFinish = async (values: any) => {
+    try {
+      const res = await api.post("/register", values);
+
+      message.success("Inscription réussie !");
+      router.push("/login");
+    } catch (error: any) {
+      message.error("Échec de la connexion");
+    }
   };
 
   const handleLoginClick = () => {
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Content
         style={{
-          padding: '50px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          padding: "50px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <div style={{ background: '#fff', padding: 24, width: 500, borderRadius: 8 }}>
+        <div
+          style={{
+            background: "#fff",
+            padding: 24,
+            width: 500,
+            borderRadius: 8,
+          }}
+        >
           <Title level={2}>Inscription</Title>
           <Form layout="vertical" onFinish={onFinish} form={form}>
-            <Form.Item name="id" label="ID" rules={[{ required: true, message: 'Veuillez entrer votre ID' }]}>
+            <Form.Item
+              name="id"
+              label="ID"
+              rules={[
+                { required: true, message: "Veuillez entrer votre ID" },
+              ]}
+            >
               <Input />
             </Form.Item>
-            <Form.Item name="nom" label="Nom" rules={[{ required: true, message: 'Veuillez entrer votre nom' }]}>
+            <Form.Item
+              name="nom"
+              label="Nom"
+              rules={[{ required: true, message: "Veuillez entrer votre nom" }]}
+            >
               <Input />
             </Form.Item>
             <Form.Item
               name="prenom"
               label="Prénom"
-              rules={[{ required: true, message: 'Veuillez entrer votre prénom' }]}
+              rules={[
+                { required: true, message: "Veuillez entrer votre prénom" },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -50,8 +79,8 @@ export default function RegisterPage() {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: 'Veuillez entrer votre email' },
-                { type: 'email', message: 'Email invalide' },
+                { required: true, message: "Veuillez entrer votre email" },
+                { type: "email", message: "Email invalide" },
               ]}
             >
               <Input />
@@ -59,7 +88,9 @@ export default function RegisterPage() {
             <Form.Item
               name="telephone"
               label="Téléphone"
-              rules={[{ required: true, message: 'Veuillez entrer votre téléphone' }]}
+              rules={[
+                { required: true, message: "Veuillez entrer votre téléphone" },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -67,7 +98,12 @@ export default function RegisterPage() {
             <Form.Item
               name="password"
               label="Mot de passe"
-              rules={[{ required: true, message: 'Veuillez entrer votre mot de passe' }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Veuillez entrer votre mot de passe",
+                },
+              ]}
               hasFeedback
             >
               <Input.Password />
@@ -76,16 +112,21 @@ export default function RegisterPage() {
             <Form.Item
               name="confirm"
               label="Confirmer le mot de passe"
-              dependencies={['password']}
+              dependencies={["password"]}
               hasFeedback
               rules={[
-                { required: true, message: 'Veuillez confirmer votre mot de passe' },
+                {
+                  required: true,
+                  message: "Veuillez confirmer votre mot de passe",
+                },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
-                    if (!value || getFieldValue('password') === value) {
+                    if (!value || getFieldValue("password") === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('Les mots de passe ne correspondent pas'));
+                    return Promise.reject(
+                      new Error("Les mots de passe ne correspondent pas")
+                    );
                   },
                 }),
               ]}
