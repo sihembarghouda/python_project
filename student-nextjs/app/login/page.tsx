@@ -53,7 +53,7 @@ export default function LoginPage() {
         </Form.Item>
         <Form.Item>
           <Button type="link" block onClick={() => router.push("/register")}>
-            Pas de compte ? S'inscrire
+            Pas de compte ? inscrivez vous 
           </Button>
         </Form.Item>
       </Form>
