@@ -6,11 +6,9 @@ import com.example.favoritesservice.exception.ResourceNotFoundException;
 import com.example.favoritesservice.model.Course;
 import com.example.favoritesservice.model.Favorite;
 import com.example.favoritesservice.repository.FavoriteRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.mockito.ArgumentMatchers;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,11 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -85,10 +83,10 @@ public class FavoriteServiceTest {
         FavoriteResponse result = favoriteService.addFavorite(favoriteRequest);
 
         // Then
-        assertThat(((List<FavoriteResponse>) result).toString()).isNotNull();
-        assertThat(result.getId()).equals(favorite.getId());
-        assertThat(result.getUserId()).equals(favorite.getUserId());
-        assertThat(result.getCourseId()).equals(favorite.getCourseId());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(favorite.getId());
+        assertThat(result.getUserId()).isEqualTo(favorite.getUserId());
+        assertThat(result.getCourseId()).isEqualTo(favorite.getCourseId());
 
         verify(favoriteRepository).existsByUserIdAndCourseId(userId, courseId);
         verify(favoriteRepository).save(any(Favorite.class));
@@ -105,8 +103,8 @@ public class FavoriteServiceTest {
         FavoriteResponse result = favoriteService.addFavorite(favoriteRequest);
 
         // Then
-        Assertions.assertThat(result).isNotNull();
-        assertThat(result.getId()).equals(favorite.getId());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(favorite.getId());
 
         verify(favoriteRepository).existsByUserIdAndCourseId(userId, courseId);
         verify(favoriteRepository).findByUserIdAndCourseId(userId, courseId);
@@ -133,16 +131,12 @@ public class FavoriteServiceTest {
         List<FavoriteResponse> result = favoriteService.getUserFavorites(userId);
 
         // Then
-        Assertions.assertThat(result).isNotNull();
-        assertThat(result.toString()).hashCode();
-        assertThat(result.get(0).getId()).equals(favorite.getId());
-        assertThat(result.get(1).getId()).equals(favorite2.getId());
+        assertThat(result).isNotNull();
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getId()).isEqualTo(favorite.getId());
+        assertThat(result.get(1).getId()).isEqualTo(favorite2.getId());
 
         verify(favoriteRepository).findByUserId(userId);
-    }
-
-    private ArgumentMatchers assertThat(String result) {
-        return null;
     }
 
     @Test
@@ -155,7 +149,7 @@ public class FavoriteServiceTest {
         boolean result = favoriteService.isFavorite(userId, courseId);
 
         // Then
-        assertThat(String.valueOf(result)).toString();
+        assertThat(result).isTrue();
         verify(favoriteRepository).existsByUserIdAndCourseId(userId, courseId);
     }
 
@@ -169,8 +163,8 @@ public class FavoriteServiceTest {
         FavoriteResponse result = favoriteService.getFavorite(userId, courseId);
 
         // Then
-        Assertions.assertThat(result).isNotNull();
-        assertThat(result.getId()).equals(favorite.getId());
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(favorite.getId());
         verify(favoriteRepository).findByUserIdAndCourseId(userId, courseId);
     }
 
@@ -220,7 +214,7 @@ public class FavoriteServiceTest {
     @DisplayName("Test suppression de tous les favoris d'un utilisateur")
     void testRemoveAllUserFavorites() {
         // Given
-        List<Favorite> favorites = Arrays.asList(favorite);
+        List<Favorite> favorites = Collections.singletonList(favorite);
         given(favoriteRepository.findByUserId(userId)).willReturn(favorites);
         doNothing().when(favoriteRepository).delete(any(Favorite.class));
 
