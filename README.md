@@ -13,7 +13,7 @@
 - [Frontend Admin (Angular)](#frontend-admin-angular)  
 - [Base de Données](#base-de-données)  
 - [Documentation du Code](#documentation-du-code)  
-- [Captures d’Écran](#captures-décran)  
+ 
 - [Contact](#contact)  
 
 ---
@@ -152,16 +152,12 @@ Le projet respecte les bonnes pratiques de développement et est structuré pour
 
 ---
 
-## Captures d’Écran
 
-*(Insérer ici les images des différentes pages et fonctionnalités du projet)*
-
----
 
 ## Contact
 
 Pour toute question, vous pouvez me contacter à :  
-- Email : ton.email@example.com  
+
 - GitHub : https://github.com/sihem barghouda  
 
 
