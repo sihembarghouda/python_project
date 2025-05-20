@@ -1,109 +1,170 @@
 
-# Projet Full Stack - Application de Gestion de Formations en Ligne
+# Projet Gestion des Étudiants et Formations
 
-## 🧩 Structure du Projet
+## Sommaire
 
-Ce projet est composé de plusieurs parties backend et frontend réparties en microservices et applications clientes, avec des technologies modernes : FastAPI, Spring Boot, Angular, Next.js, PostgreSQL, MongoDB, Redis.
-
----
-
-## 🏁 Partie 1 : Découverte de FastAPI - Gestion des Étudiants
-
-### Backend (FastAPI)
-- Création d’une API REST avec FastAPI pour gérer une liste d’étudiants.
-- Les étudiants ont un nom, un prénom, un email et un identifiant unique.
-- Exemple d’endpoint :
-  - `GET /students` : liste des étudiants
-  - `POST /students` : ajouter un étudiant
-  - `GET /students/{id}` : consulter un étudiant
-
-### Frontend Étudiant (Next.js)
-- Affichage des étudiants avec possibilité d’en ajouter via formulaire.
+- [Description du Projet](#description-du-projet)  
+- [Fonctionnalités](#fonctionnalités)  
+- [Architecture du Projet](#architecture-du-projet)  
+- [Choix Techniques et Justifications](#choix-techniques-et-justifications)  
+- [Installation et Lancement](#installation-et-lancement)  
+- [Backend](#backend)  
+- [Frontend Étudiant (Next.js)](#frontend-étudiant-nextjs)  
+- [Frontend Admin (Angular)](#frontend-admin-angular)  
+- [Base de Données](#base-de-données)  
+- [Documentation du Code](#documentation-du-code)  
+- [Captures d’Écran](#captures-décran)  
+- [Contact](#contact)  
 
 ---
 
-## 📘 Partie 2 : Ajout des Entités "Département" et "Formation"
+## Description du Projet
+
+Ce projet est une application complète de gestion des étudiants et des formations.  
+Chaque étudiant est rattaché à un département et peut s’inscrire à différentes formations.  
+L’application propose deux interfaces principales :  
+- Un frontend Next.js destiné aux étudiants pour s’inscrire, gérer leur profil et suivre leurs formations.  
+- Un frontend Angular destiné à l’administration pour gérer les étudiants, les formations, et consulter des statistiques.
+
+---
+
+## Fonctionnalités
+
+### Frontend Étudiant
+
+- Inscription et connexion sécurisées  
+- Consultation et modification du profil  
+- Inscription aux formations disponibles  
+- Consultation des formations suivies  
+
+### Frontend Admin
+
+- Gestion complète des étudiants (CRUD)  
+- Gestion des formations (CRUD)  
+- Attribution des étudiants aux départements  
+- Visualisation de statistiques (nombre d’étudiants par formation, par département, etc.)  
 
 ### Backend
-- Ajout des modèles `Departement` et `Formation` :
-  - Un étudiant appartient à un seul département.
-  - Un étudiant peut suivre plusieurs formations.
-- Base de données : MongoDb (choisie pour sa robustesse, normalisation, support large avec FastAPI et ORM SQLAlchemy).
+
+- API RESTful sécurisée avec FastAPI  
+- Gestion des entités Étudiant, Département, Formation  
+- Authentification et autorisation  
+- Validation des données  
+
+---
+
+## Architecture du Projet
+
+```
+/backend       - API FastAPI
+/frontend-etudiant - Next.js (React)
+/frontend-admin - Angular
+/database     - MongoDb
+```
+
+---
+
+## Choix Techniques et Justifications
+
+- **Backend :** FastAPI pour sa rapidité, sa simplicité, et son support natif de la documentation Swagger.  
+- **Frontend Étudiant :** Next.js pour le rendu serveur, SEO et une bonne expérience utilisateur.  
+- **Frontend Admin :** Angular pour ses outils de gestion d’état, sa robustesse pour des applications complexes.  
+- **Base de données :** PostgreSQL via Neon pour sa performance, fiabilité, et facilité d’intégration avec FastAPI.  
+- **Authentification :** JWT pour sécuriser les accès.  
+
+---
+
+## Installation et Lancement
+
+### Backend
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Linux/MacOS
+venv\Scripts\activate   # Windows
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
 ### Frontend Étudiant (Next.js)
-- Inscription d’un étudiant au site.
-- Consultation des formations suivies.
-- Consultation du profil.
+
+```bash
+cd frontend-etudiant
+npm install
+npm run dev
+```
 
 ### Frontend Admin (Angular)
-- Gestion des étudiants (CRUD).
-- Gestion des formations (CRUD).
-- Statistiques (nombre d’étudiants par département, par formation...)
 
----
-
-## 🌐 Partie 3 : Microservice Spring Boot - Favoris et Recommandation
-
-### Microservice Favoris (Spring Boot)
-- Gestion des favoris par utilisateur (ajout, suppression, récupération).
-- Base de données : MongoDB (souplesse, flexibilité pour données utilisateur non strictement relationnelles).
-- Utilisation de Redis pour accélérer les lectures fréquentes (cache des favoris).
-
-### Tests
-- Tests unitaires : JUnit + Mockito
-- Tests d’intégration : Spring Test
-- Tests E2E : Selenium / Cypress
-
----
-
-## 🤖 Partie 4 : Recommandation de Livres et Résumés IA
-
-### Scraping & Recommandations (FastAPI)
-- Scraping du site [books.toscrape.com](https://books.toscrape.com).
-- Stockage dans PostgreSQL (`recommended_books`).
-- Route GET `/recommendations` :
-  - Filtres : `category`, `price_min`, `price_max`
-
-### Résumé Intelligent de Livre
-- Route GET `/books/summary?title=...`
-- Résumé généré automatiquement avec API OpenAI (ou HuggingFace, Mistral, etc.)
-
----
-
-## 🚀 Déploiement et Organisation Agile
-
-### Déploiement
-- API et microservices conteneurisés avec Docker.
-- Base de données hébergée sur PostgreSQL / MongoDB Atlas.
-- Frontend déployé avec Vercel (Next.js) et Firebase/Netlify (Angular).
-
-### Organisation Scrum
-- Jira pour la gestion des tâches, user stories, sprints.
-- Revue quotidienne, démonstration à la fin de chaque sprint.
-
----
-
-## 📁 Structure des Répertoires
-
-```
-/backend-fastapi
-/backend-springboot-favoris
-/frontend-nextjs-etudiant
-/frontend-angular-admin
-/database/postgresql
-/tests/
-/scraping/
+```bash
+cd frontend-admin
+npm install
+ng serve
 ```
 
 ---
 
-## 👨‍💻 Contributeurs
+## Backend
 
-- Étudiant(e) : Barghouda Sihem
+- Endpoints REST pour CRUD sur Étudiants, Départements, Formations  
+- Middleware d’authentification JWT  
+- Validation des données avec Pydantic  
+
+---
+
+## Frontend Étudiant (Next.js)
+
+- Pages :  
+  - `/register` : inscription  
+  - `/login` : connexion  
+  - `/profile` : profil utilisateur  
+  - `/formations` : liste des formations et inscription  
+- Utilisation de `axios` pour les appels API  
+- Gestion du state avec React Context  
+
+---
+
+## Frontend Admin (Angular)
+
+- Dashboard avec statistiques  
+- Pages de gestion des étudiants et formations  
+- Utilisation de services Angular pour communiquer avec l’API backend  
+- Formulaires réactifs avec validations  
+
+---
+
+## Base de Données
+
+- Tables principales :  
+  - `etudiants`  
+  - `departements`  
+  - `formations`  
+  - `cours` (table de liaison)  
+- Relations bien définies avec clés étrangères  
+
+---
+
+## Documentation du Code
+
+Chaque fichier et fonction est documenté avec des commentaires clairs.  
+Le projet respecte les bonnes pratiques de développement et est structuré pour faciliter la maintenance et l’évolution.  
+
+---
+
+## Captures d’Écran
+
+*(Insérer ici les images des différentes pages et fonctionnalités du projet)*
+
+---
+
+## Contact
+
+Pour toute question, vous pouvez me contacter à :  
+- Email : ton.email@example.com  
+- GitHub : https://github.com/sihem barghouda  
 
 
 ---
 
-## 📄 Licence
-
-Ce projet est sous licence MIT.
+Merci d’avoir consulté ce projet !
