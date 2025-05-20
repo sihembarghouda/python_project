@@ -1,17 +1,19 @@
 "use client";
 import { Button, Form, Input, message, Typography } from "antd";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import api from "@/lib/http";
-
 
 const { Title } = Typography;
 
 export default function LoginPage() {
   const router = useRouter();
 
-  if (localStorage.getItem("currentUser")) {
-    router.push("/dashboard");
-  } 
+  useEffect(() => {
+    if (localStorage.getItem("currentUser")) {
+      router.push("/dashboard");
+    }
+  }, [router]);
 
   const onFinish = async (values: any) => {
     try {

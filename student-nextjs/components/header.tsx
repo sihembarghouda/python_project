@@ -1,8 +1,14 @@
 'use client';
 
 import { Menu, Layout, notification } from 'antd';
-import { FileAddOutlined, UserOutlined, LogoutOutlined, DashboardOutlined } from '@ant-design/icons';
+import {
+  FileAddOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  DashboardOutlined,
+} from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
+import type { MenuProps } from 'antd';
 
 const { Header } = Layout;
 
@@ -13,8 +19,8 @@ interface HeaderMenuProps {
 const HeaderMenu = ({ active }: HeaderMenuProps) => {
   const router = useRouter();
 
-  const handleClick = (e: any) => {
-    switch (e.key) {
+  const handleClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
       case 'dashboard':
         router.push('/dashboard');
         break;
@@ -35,6 +41,29 @@ const HeaderMenu = ({ active }: HeaderMenuProps) => {
     }
   };
 
+  const menuItems: MenuProps['items'] = [
+    {
+      key: 'dashboard',
+      icon: <DashboardOutlined />,
+      label: 'Dashboard',
+    },
+    {
+      key: 'profil',
+      icon: <UserOutlined />,
+      label: 'Mon Profil',
+    },
+    {
+      key: 'inscription',
+      icon: <FileAddOutlined />,
+      label: 'Inscription Cours',
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      label: 'Logout',
+    },
+  ];
+
   return (
     <Header>
       <Menu
@@ -42,20 +71,8 @@ const HeaderMenu = ({ active }: HeaderMenuProps) => {
         mode="horizontal"
         onClick={handleClick}
         selectedKeys={[active]}
-      >
-        <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-          Dashboard
-        </Menu.Item>
-        <Menu.Item key="profil" icon={<UserOutlined />}>
-          Mon Profil
-        </Menu.Item>
-        <Menu.Item key="inscription" icon={<FileAddOutlined />}>
-          Inscription Cours
-        </Menu.Item>
-        <Menu.Item key="logout" icon={<LogoutOutlined />}>
-          Logout
-        </Menu.Item>
-      </Menu>
+        items={menuItems}
+      />
     </Header>
   );
 };

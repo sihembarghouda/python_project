@@ -1,15 +1,34 @@
 'use client';
 
-import { Layout, Typography, Descriptions } from 'antd';
-import HeaderMenu from '@/components/header'; // Adjust path if needed
+import { Layout, Typography, Descriptions, Spin } from 'antd';
+import HeaderMenu from '@/components/header';
+import { useEffect, useState } from 'react';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-// Dummy current user data
-const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-
 export default function MonProfilPage() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    setCurrentUser(user);
+  }, []);
+
+  if (!currentUser) {
+    // Affiche un loader ou un fallback si l'utilisateur n'est pas encore chargé
+    return (
+      <Layout style={{ minHeight: '100vh' }}>
+        <HeaderMenu active="profil" />
+        <Content style={{ padding: '50px' }}>
+          <div style={{ textAlign: 'center', marginTop: '100px' }}>
+            <Spin size="large" />
+          </div>
+        </Content>
+      </Layout>
+    );
+  }
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <HeaderMenu active="profil" />

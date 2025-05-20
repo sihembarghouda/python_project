@@ -1,15 +1,12 @@
 'use client';
 
 import { Layout, Typography, Table, message } from 'antd';
-import HeaderMenu from '@/components/header'; // adjust path if your structure is different
+import HeaderMenu from '@/components/header';
 import { useEffect, useState } from 'react';
 import api from '@/lib/http';
 
 const { Content } = Layout;
 const { Title } = Typography;
-
-// Dummy data for enrolled courses
-let followedCourses: any[] = [];
 
 interface Cours {
   id: number;
@@ -30,40 +27,51 @@ const columns = [
 ];
 
 export default function DashboardPage() {
-    // State to hold courses data and loading state
   const [courses, setCourses] = useState<Cours[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-    useEffect(() => {
-    api
-      .get("/cours-etudiant/" + currentUser.id)
-      .then((res: any) => {followedCourses = res.data; console.log(followedCourses);})
-      .catch(() => message.error("Échec de récupération des formations"));
+  const [userId, setUserId] = useState<number | null>(null);
+
+  // Récupérer l'utilisateur depuis localStorage après le rendu
+  useEffect(() => {
+    const userStr = localStorage.getItem("currentUser");
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setUserId(user.id);
+    }
   }, []);
 
-   // Fetch courses data when the component mounts
+  // Charger les cours une fois qu’on a l’ID de l’utilisateur
   useEffect(() => {
-    // Async function to fetch courses
+    if (userId === null) return;
+
     const fetchCourses = async () => {
       try {
-      const response = await api.get("/cours-etudiant/" + currentUser.id);
+        const response = await api.get("/cours-etudiant/" + userId);
         setCourses(response.data);
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.error("Erreur lors du chargement des formations :", error);
+        message.error("Échec de récupération des formations");
       } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
       }
     };
 
     fetchCourses();
-  }, []);
+  }, [userId]);
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <HeaderMenu active="dashboard" />
       <Content style={{ padding: '50px' }}>
         <div style={{ background: '#fff', padding: 24, borderRadius: 8, maxWidth: 800, margin: '0 auto' }}>
           <Title level={2}>Mes Formations</Title>
-          <Table rowKey="id" columns={columns} dataSource={followedCourses}  pagination={false} />
+          <Table
+            rowKey="id"
+            columns={columns}
+            dataSource={courses}
+            loading={loading}
+            pagination={false}
+          />
         </div>
       </Content>
     </Layout>
