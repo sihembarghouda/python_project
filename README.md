@@ -157,7 +157,7 @@ Le projet respecte les bonnes pratiques de développement et est structuré pour
 ## Contact
 
 Pour toute question, vous pouvez me contacter à :  
-- Email : ton.email@example.com  
+
 - GitHub : https://github.com/sihem barghouda  
 
 
