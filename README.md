@@ -13,7 +13,7 @@
 - [Frontend Admin (Angular)](#frontend-admin-angular)  
 - [Base de Données](#base-de-données)  
 - [Documentation du Code](#documentation-du-code)  
-- [Captures d’Écran](#captures-décran)  
+ 
 - [Contact](#contact)  
 
 ---
