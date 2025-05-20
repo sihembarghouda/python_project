@@ -3,7 +3,12 @@ from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
-
+import requests
+from bs4 import BeautifulSoup
+from sqlalchemy import create_engine, Column, Integer, String, Float
+from sqlalchemy.orm import sessionmaker, declarative_base
+from typing import List
+from fastapi import Depends
 
 origins = [
     "http://localhost:4200",
@@ -11,6 +16,10 @@ origins = [
 ]
 
 app = FastAPI()
+
+@app.get("/")
+async def root():
+    return {"message": "Bienvenue sur mon API FastAPI"} 
 
 app.add_middleware(
     CORSMiddleware,
@@ -53,6 +62,24 @@ class Cours(BaseModel):
 
 client = AsyncIOMotorClient("mongodb://localhost:27017")
 db = client["students-management"]
+
+PG_DB_URL = "postgresql+psycopg2://postgres:0000@localhost:5432/books"
+
+Base = declarative_base()
+
+class Book(Base):
+    __tablename__ = "books"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    price = Column(Float)
+    availability = Column(String)
+    category = Column(String, index=True)
+
+engine = create_engine(PG_DB_URL)
+SessionLocal = sessionmaker(bind=engine)
+
+# Create tables
+Base.metadata.create_all(bind=engine)
 
 @app.get("/etudiants")
 async def liste_etudiants():
@@ -196,3 +223,93 @@ async def cours_etudiant(item_id: int):
         formation = await db["formations"].find_one({"id": item['formation_id']}, {"_id": 0})
         formations.append(formation)
     return formations   
+
+def scrape_books():
+    base_url = "https://books.toscrape.com/"
+    category_url = base_url + "catalogue/category/books_1/index.html"
+    books = []
+
+    # The website uses pagination, so loop through pages
+    while category_url:
+        response = requests.get(category_url)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Scrape all books on this page
+        articles = soup.find_all("article", class_="product_pod")
+        print(len(articles))
+        for article in articles:
+            # Title
+            title = article.h3.a['title']
+
+            # Price
+            price_str = article.find("p", class_="price_color").text.strip()
+            price = float(price_str.replace("£", ""))
+
+            # Availability
+            availability = article.find("p", class_="instock availability").text.strip()
+
+            # Category: we have to go to the book detail page to get the category
+            book_rel_url = article.h3.a['href']
+            book_url = base_url + "catalogue/" + book_rel_url.replace("../../", "")
+
+            book_page = requests.get(book_url)
+            book_soup = BeautifulSoup(book_page.text, "html.parser")
+
+            # Category is in breadcrumb > second last <li> before active
+            breadcrumb = book_soup.select("ul.breadcrumb li")
+            # category is usually the 3rd item in breadcrumb (index 2)
+            category = breadcrumb[2].text.strip()
+
+            books.append({
+                "title": title,
+                "price": price,
+                "availability": availability,
+                "category": category
+            })
+
+        # Check if there's a next page
+        next_btn = soup.select_one("li.next a")
+        next_btn = False
+        category_url = None
+
+    return books
+
+@app.post("/scrape-books")
+def scrape_and_save():
+    session = SessionLocal()
+    books = scrape_books()
+    print(len(books))
+
+    # Save to DB
+    for book in books:
+        # Check if book already exists by title (optional)
+        existing = session.query(Book).filter(Book.title == book['title']).first()
+        if not existing:
+            new_book = Book(
+                title=book['title'],
+                price=book['price'],
+                availability=book['availability'],
+                category=book['category']
+            )
+            session.add(new_book)
+    print("hani hna")
+    session.commit()
+    session.close()
+    return {"message": f"Scraped and saved {len(books)} books."}
+
+class BookOut(BaseModel):
+    id: int
+    title: str
+    price: float
+    availability: str
+    category: str
+
+    class Config:
+        orm_mode = True
+
+@app.get("/books", response_model=List[BookOut])
+def get_books():
+    session = SessionLocal()
+    books = session.query(Book).all()
+    return books    

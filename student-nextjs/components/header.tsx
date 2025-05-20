@@ -1,66 +1,75 @@
-'use client';
+"use client";
 
-import { Menu, Layout, notification } from 'antd';
+import { Menu, Layout, notification } from "antd";
 import {
   FileAddOutlined,
   UserOutlined,
   LogoutOutlined,
   DashboardOutlined,
-} from '@ant-design/icons';
-import { useRouter } from 'next/navigation';
-import type { MenuProps } from 'antd';
+  BookOutlined,
+} from "@ant-design/icons";
+import { useRouter } from "next/navigation";
+import type { MenuProps } from "antd";
 
 const { Header } = Layout;
 
 interface HeaderMenuProps {
-  active: 'dashboard' | 'inscription' | 'profil';
+  active: "dashboard" | "inscription" | "books" | "profil" ;
 }
 
 const HeaderMenu = ({ active }: HeaderMenuProps) => {
   const router = useRouter();
 
-  const handleClick: MenuProps['onClick'] = ({ key }) => {
+  const handleClick: MenuProps["onClick"] = ({ key }) => {
     switch (key) {
-      case 'dashboard':
-        router.push('/dashboard');
+      case "dashboard":
+        router.push("/dashboard");
         break;
-      case 'inscription':
-        router.push('/inscription-cours');
+      case "inscription":
+        router.push("/inscription-cours");
         break;
-      case 'profil':
-        router.push('/mon-profil');
+      case "books":
+        router.push("/books");
         break;
-      case 'logout':
-        localStorage.removeItem('currentUser');
+      case "profil":
+        router.push("/mon-profil");
+        break;
+      case "logout":
+        localStorage.removeItem("currentUser");
         notification.success({
-          message: 'Déconnexion réussie',
-          description: 'Vous avez été déconnecté avec succès.',
+          message: "Déconnexion réussie",
+          description: "Vous avez été déconnecté avec succès.",
         });
-        router.push('/login');
+        router.push("/login");
         break;
     }
   };
 
-  const menuItems: MenuProps['items'] = [
+  const menuItems: MenuProps["items"] = [
     {
-      key: 'dashboard',
+      key: "dashboard",
       icon: <DashboardOutlined />,
-      label: 'Dashboard',
+      label: "Dashboard",
     },
     {
-      key: 'profil',
+      key: "profil",
       icon: <UserOutlined />,
-      label: 'Mon Profil',
+      label: "Mon Profil",
     },
     {
-      key: 'inscription',
+      key: "inscription",
       icon: <FileAddOutlined />,
-      label: 'Inscription Cours',
+      label: "Inscription Cours",
     },
     {
-      key: 'logout',
+      key: "books",
+      icon: <BookOutlined />,
+      label: "Livres",
+    },
+    {
+      key: "logout",
       icon: <LogoutOutlined />,
-      label: 'Logout',
+      label: "Logout",
     },
   ];
 
