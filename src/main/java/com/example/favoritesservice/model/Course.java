@@ -22,4 +22,7 @@ public class Course implements Serializable {
     private Double rating;
     private String category;
     private Integer durationHours;
+
+    public void setName(String s) {
+    }
 }

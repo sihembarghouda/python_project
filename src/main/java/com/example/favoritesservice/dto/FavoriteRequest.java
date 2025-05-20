@@ -21,4 +21,7 @@ public class FavoriteRequest {
 
     @NotNull(message = "Course details are required")
     private Course course;
+
+    public FavoriteRequest(String user1, String course1, String courseName) {
+    }
 }
