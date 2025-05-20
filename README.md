@@ -152,11 +152,7 @@ Le projet respecte les bonnes pratiques de développement et est structuré pour
 
 ---
 
-## Captures d’Écran
 
-*(Insérer ici les images des différentes pages et fonctionnalités du projet)*
-
----
 
 ## Contact
 
